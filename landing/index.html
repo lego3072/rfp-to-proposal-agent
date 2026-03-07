@@ -5,57 +5,171 @@
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>RFP-to-Proposal Agent | DataWeave INC</title>
   <meta name="description" content="Extract requirements, score fit, assemble proposal drafts, and generate pricing-ready outputs with auditability." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;700;800&family=Sora:wght@500;600;700;800&display=swap" rel="stylesheet" />
   <style>
-    :root{--bg:#17120f;--panel:#3b2a1f;--line:#2e607f;--txt:#e6f2ff;--muted:#9dc5df;--c1:#fb923c;--c2:#f59e0b;}
-    *{box-sizing:border-box}body{margin:0;font-family:Inter,system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;background:radial-gradient(1200px 700px at 80% -20%,#1c3550 0%,var(--bg) 55%);color:var(--txt)}
-    .wrap{max-width:1080px;margin:0 auto;padding:24px 16px 88px}
-    .card{background:linear-gradient(180deg,rgba(255,255,255,.03),rgba(255,255,255,.01));border:1px solid var(--line);border-radius:20px;padding:20px}
-    .hero{display:grid;grid-template-columns:1.2fr .8fr;gap:16px;align-items:stretch}
-    h1{font-size:44px;line-height:1.04;margin:4px 0 10px}
-    p{color:var(--muted);font-size:20px;line-height:1.45;margin:0 0 14px}
-    .badge{display:inline-block;padding:8px 12px;border-radius:999px;border:1px solid #2f6f90;color:#cceafe;font-size:12px;letter-spacing:.3px}
-    .price{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:12px 0}
-    .p{border:1px solid #2f6789;border-radius:14px;padding:12px}
-    .p .n{font-size:14px;color:#bee1f7} .p .v{font-size:36px;font-weight:800;line-height:1}
-    .cta{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}
-    .btn{display:inline-block;text-decoration:none;font-weight:700;border-radius:12px;padding:12px 16px;border:1px solid #2e6687}
-    .btn-main{background:linear-gradient(135deg,var(--c1),var(--c2));color:#041321;border:none}
-    .btn-ghost{background:transparent;color:#d3ebff}
-    .grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-top:14px}
-    .f{border:1px solid #2d6383;border-radius:12px;padding:12px;font-size:14px;color:#b8d9ef}
-    .footer{margin-top:18px;display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap;color:#96b8cf;font-size:13px}
-    .footer a{color:#b9e8ff;text-decoration:none}
-    .sticky{display:none}
-    @media(max-width:920px){.hero{grid-template-columns:1fr}.grid{grid-template-columns:1fr}h1{font-size:36px}p{font-size:18px}.sticky{display:flex;position:fixed;left:0;right:0;bottom:0;z-index:40;gap:8px;padding:10px 12px;background:rgba(5,14,24,.95);border-top:1px solid #2f6787}.sticky a{flex:1;text-align:center}body{padding-bottom:72px}}
+    :root {--bg:#17120f;--panel:#3b2a1f;--line:#2e607f;--txt:#e6f2ff;--muted:#9dc5df;--c1:#fb923c;--c2:#f59e0b;}
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: 'Manrope', system-ui, -apple-system, sans-serif;
+      background: radial-gradient(1200px 700px at 85% -20%, rgba(255,255,255,.16), transparent 45%), var(--bg);
+      color: var(--txt);
+    }
+    .wrap { max-width: 1120px; margin: 0 auto; padding: 22px 16px 92px; }
+    .nav { display:flex; align-items:center; justify-content:space-between; gap:12px; margin-bottom:16px; }
+    .brand { display:flex; align-items:center; gap:10px; text-decoration:none; color:var(--txt); font-family:'Sora', sans-serif; font-weight:700; letter-spacing:.2px; }
+    .brand img { width:30px; height:30px; border-radius:8px; border:1px solid rgba(255,255,255,.2); }
+    .nav-links { display:flex; gap:10px; flex-wrap:wrap; }
+    .nav-links a { text-decoration:none; font-size:13px; color:#d4ebff; border:1px solid var(--line); border-radius:999px; padding:7px 11px; }
+
+    .hero {
+      display:grid; grid-template-columns: 1.1fr .9fr; gap:16px;
+      background: linear-gradient(170deg, rgba(255,255,255,.08), rgba(255,255,255,.02));
+      border:1px solid var(--line); border-radius:22px; padding:20px;
+      box-shadow: inset 0 0 0 1px rgba(255,255,255,.05);
+    }
+    .badge { display:inline-block; border:1px solid rgba(255,255,255,.26); border-radius:999px; padding:7px 11px; font-size:12px; color:#d7ecff; letter-spacing:.2px; }
+    h1 { font-family:'Sora', sans-serif; font-size:42px; line-height:1.04; margin:12px 0 10px; }
+    .sub { font-size:19px; line-height:1.45; color:var(--muted); margin:0 0 14px; }
+
+    .pricing { display:grid; grid-template-columns:1fr 1fr; gap:10px; margin:14px 0; }
+    .plan { border:1px solid rgba(255,255,255,.24); border-radius:14px; padding:12px; background:rgba(5,13,24,.24); }
+    .plan .label { color:#c7e6ff; font-size:13px; }
+    .plan .price { font-family:'Sora', sans-serif; font-size:34px; margin-top:2px; }
+    .plan .tiny { color:var(--muted); font-size:12px; }
+
+    .cta { display:flex; gap:10px; flex-wrap:wrap; }
+    .btn { border-radius:12px; padding:12px 15px; font-weight:800; text-decoration:none; border:1px solid var(--line); }
+    .btn-main { background:linear-gradient(135deg, var(--c1), var(--c2)); color:#041321; border:none; }
+    .btn-ghost { color:#d4ebff; background:transparent; }
+
+    .runtime { margin-top:12px; font-size:13px; color:#d0ebff; background:rgba(4,14,26,.3); border:1px dashed rgba(255,255,255,.25); border-radius:10px; padding:10px; }
+
+    .visual {
+      border:1px solid rgba(255,255,255,.22); border-radius:16px; padding:14px;
+      background: linear-gradient(180deg, rgba(255,255,255,.05), rgba(255,255,255,.02));
+      display:flex; flex-direction:column; gap:12px;
+    }
+    .visual img.hero { width:100%; border-radius:12px; border:1px solid rgba(255,255,255,.18); }
+    .chips { display:grid; grid-template-columns:repeat(3,1fr); gap:8px; }
+    .chip { border:1px solid rgba(255,255,255,.2); border-radius:12px; padding:10px; font-size:12px; color:#c7e5fb; min-height:86px; background:rgba(0,0,0,.18); }
+    .chip img { width:22px; height:22px; display:block; margin-bottom:8px; opacity:.95; }
+
+    .row { display:grid; grid-template-columns:repeat(3,1fr); gap:12px; margin-top:16px; }
+    .card { border:1px solid var(--line); border-radius:16px; padding:14px; background:linear-gradient(180deg, rgba(255,255,255,.03), rgba(255,255,255,.01)); }
+    .card h3 { margin:0 0 8px; font-family:'Sora',sans-serif; font-size:17px; }
+    .card p, .card li { margin:0; color:var(--muted); font-size:14px; line-height:1.45; }
+    .card ul { margin:0; padding-left:18px; display:grid; gap:6px; }
+
+    .stack { margin-top:16px; display:grid; grid-template-columns:1.15fr .85fr; gap:12px; }
+    .comp-links { display:flex; gap:8px; flex-wrap:wrap; margin-top:8px; }
+    .comp-links a { text-decoration:none; color:#d5ecff; border:1px solid rgba(255,255,255,.22); padding:8px 10px; border-radius:999px; font-size:12px; }
+
+    .footer { margin-top:16px; display:flex; justify-content:space-between; flex-wrap:wrap; gap:10px; color:#96b8cf; font-size:13px; }
+    .footer a { color:#b9e8ff; text-decoration:none; }
+
+    .sticky { display:none; }
+    @media (max-width: 960px) {
+      h1 { font-size:34px; }
+      .sub { font-size:17px; }
+      .hero { grid-template-columns:1fr; }
+      .row { grid-template-columns:1fr; }
+      .stack { grid-template-columns:1fr; }
+      .chips { grid-template-columns:1fr; }
+      .sticky { display:flex; position:fixed; left:0; right:0; bottom:0; z-index:40; gap:8px; padding:10px 12px; background:rgba(5,14,24,.95); border-top:1px solid var(--line); }
+      .sticky a { flex:1; text-align:center; }
+      body { padding-bottom:74px; }
+    }
   </style>
 </head>
 <body>
   <main class="wrap">
+    <nav class="nav">
+      <a class="brand" href="/"><img src="/logo.svg" alt="logo" /> RFP-to-Proposal Agent</a>
+      <div class="nav-links">
+        <a href="/docs-page">Docs</a>
+        <a href="/privacy">Privacy</a>
+        <a href="/terms">Terms</a>
+        <a id="bundle-top" target="_blank" rel="noreferrer" href="https://get-agent-router.com/bundle?utm_source=rfptoproposalagent&utm_medium=referral&utm_campaign=bundle_offer">Bundle Offer</a>
+      </div>
+    </nav>
+
     <section class="hero">
-      <article class="card">
+      <article>
         <span class="badge">Agent-Native Revenue Product</span>
         <h1>Convert RFPs Into Structured Proposals In Minutes</h1>
-        <p>Extract requirements, score fit, assemble proposal drafts, and generate pricing-ready outputs with auditability.</p>
-        <div class="price">
-          <div class="p"><div class="n">Starter</div><div class="v">{{STARTER_PRICE_LABEL}}</div><div class="n">monthly self-serve</div></div>
-          <div class="p"><div class="n">Done-For-You</div><div class="v">{{DFY_PRICE_LABEL}}</div><div class="n">one-time implementation</div></div>
+        <p class="sub">Extract requirements, score fit, assemble proposal drafts, and generate pricing-ready outputs with auditability.</p>
+
+        <div class="pricing">
+          <div class="plan"><div class="label">Starter</div><div class="price" id="starter-price">{{STARTER_PRICE_LABEL}}</div><div class="tiny">monthly self-serve</div></div>
+          <div class="plan"><div class="label">Done-For-You</div><div class="price" id="dfy-price">{{DFY_PRICE_LABEL}}</div><div class="tiny">one-time buildout</div></div>
         </div>
+
         <div class="cta">
-          <a class="btn btn-main" target="_blank" rel="noreferrer" href="{{CHECKOUT_LINK_STARTER}}">Starter Checkout</a>
-          <a class="btn btn-ghost" target="_blank" rel="noreferrer" href="{{CHECKOUT_LINK_DFY}}">DFY Checkout</a>
+          <a id="starter-btn" class="btn btn-main" target="_blank" rel="noreferrer" href="{{CHECKOUT_LINK_STARTER}}" data-plan="starter">Start Starter</a>
+          <a id="dfy-btn" class="btn btn-ghost" target="_blank" rel="noreferrer" href="{{CHECKOUT_LINK_DFY}}" data-plan="dfy">Start DFY</a>
+          <a id="bundle-btn" class="btn btn-ghost" target="_blank" rel="noreferrer" href="https://get-agent-router.com/bundle?utm_source=rfptoproposalagent&utm_medium=referral&utm_campaign=bundle_offer" data-plan="bundle">Open 4-Tool Bundle</a>
         </div>
-        <p style="font-size:13px;margin-top:10px"><strong>Risk reversal:</strong> monthly can be canceled any time; DFY kickoff starts in &lt;24 hours.</p>
+
+        <div class="runtime" id="runtime-note">Checking live pricing and activation readiness...</div>
       </article>
-      <aside class="card">
-        <div class="grid">
-          <div class="f">Keyword targets: rfp to proposal api</div>
-          <div class="f">Keyword targets: proposal automation agent</div>
-          <div class="f">Keyword targets: bid response ai api</div>
-          <div class="f">Webhook-driven activation under 60s target</div>
-          <div class="f">Stripe checkout + follow-up sequence (10m, 6h, 24h)</div>
-          <div class="f">LLM discovery via `llms.txt` + JSON-LD + crawlable endpoints</div>
+
+      <aside class="visual">
+        <img class="hero" src="/hero-ledger.svg" alt="RFP-to-Proposal Agent overview" />
+        <div class="chips">
+          <div class="chip"><img src="/tab-audit.svg" alt="signal" />Keyword focus: rfp to proposal api</div>
+          <div class="chip"><img src="/tab-legal.svg" alt="ops" />Keyword focus: proposal automation agent</div>
+          <div class="chip"><img src="/tab-ops.svg" alt="workflow" />Keyword focus: bid response ai api</div>
         </div>
       </aside>
+    </section>
+
+    <section class="row">
+      <article class="card">
+        <h3>What Buyer Gets Today</h3>
+        <ul>
+          <li>Immediate Stripe checkout path with plan-specific onboarding.</li>
+          <li>Activation workflow and key delivery target under 60 seconds.</li>
+          <li>Support inbox monitoring + same-day implementation scheduling.</li>
+        </ul>
+      </article>
+      <article class="card">
+        <h3>First 7 Days</h3>
+        <ul>
+          <li>Day 0: payment + kickoff scope.</li>
+          <li>Day 1-3: implementation + QA on real use case inputs.</li>
+          <li>Day 4-7: live handoff, tracking, and optimization loop.</li>
+        </ul>
+      </article>
+      <article class="card">
+        <h3>Risk Controls</h3>
+        <ul>
+          <li>Rate limiting + security headers enforced in API layer.</li>
+          <li>Turnstile-ready lead gates supported in backend config.</li>
+          <li>Audit trail for checkout events and activation state.</li>
+        </ul>
+      </article>
+    </section>
+
+    <section class="stack">
+      <article class="card">
+        <h3>Related Bundle Paths</h3>
+        <p>Plans are aligned with the broader DataWeave stack. If this product is one part of your flow, use the bundled launch path to reduce setup friction and close faster.</p>
+        <div class="comp-links">
+          <a target="_blank" rel="noreferrer" href="https://get-agent-router.com/bundle?utm_source=rfptoproposalagent&utm_medium=referral&utm_campaign=stack_bundle">4-Tool Bundle ($656/mo)</a>
+          <a target="_blank" rel="noreferrer" href="https://get-agent-router.com/bundle?utm_source=rfptoproposalagent&utm_medium=referral&utm_campaign=full_launch">Full Launch Bundle ($3,156 today)</a>
+        </div>
+      </article>
+      <article class="card">
+        <h3>Companion Products</h3>
+        <p>Common pairings buyers add after checkout:</p>
+        <div class="comp-links">
+          <a target="_blank" rel="noreferrer" href="https://demoforge-ai-production.up.railway.app?utm_source=rfptoproposalagent&utm_medium=cross_sell&utm_campaign=portfolio_stack">DemoForge AI</a>
+          <a target="_blank" rel="noreferrer" href="https://agent-proposal-scoring-api-production.up.railway.app?utm_source=rfptoproposalagent&utm_medium=cross_sell&utm_campaign=portfolio_stack">Agent Proposal Scoring API</a>
+        </div>
+      </article>
     </section>
 
     <div class="footer">
@@ -63,9 +177,81 @@
       <div><a href="/docs-page">Docs</a> · <a href="/privacy">Privacy</a> · <a href="/terms">Terms</a> · <a target="_blank" rel="noreferrer" href="https://get-agent-router.com/bundle?utm_source=rfptoproposalagent&utm_medium=referral&utm_campaign=smb72_rollout">Launch Sprint</a></div>
     </div>
   </main>
+
   <div class="sticky">
-    <a class="btn btn-main" target="_blank" rel="noreferrer" href="{{CHECKOUT_LINK_STARTER}}">Start {{STARTER_PRICE_LABEL}}</a>
-    <a class="btn btn-ghost" target="_blank" rel="noreferrer" href="{{CHECKOUT_LINK_DFY}}">DFY {{DFY_PRICE_LABEL}}</a>
+    <a class="btn btn-main" target="_blank" rel="noreferrer" href="{{CHECKOUT_LINK_STARTER}}" data-plan="starter">Starter</a>
+    <a class="btn btn-ghost" target="_blank" rel="noreferrer" href="{{CHECKOUT_LINK_DFY}}" data-plan="dfy">DFY</a>
   </div>
+
+  <script>
+    const appState = {
+      source: new URLSearchParams(window.location.search).get('utm_source') || 'site',
+      starterLabel: '{{STARTER_PRICE_LABEL}}',
+      dfyLabel: '{{DFY_PRICE_LABEL}}',
+      starterHref: '{{CHECKOUT_LINK_STARTER}}',
+      dfyHref: '{{CHECKOUT_LINK_DFY}}'
+    };
+
+    async function track(event, plan = null) {
+      try {
+        await fetch('/api/public/event', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ event, plan, source: appState.source })
+        });
+      } catch (_) {}
+      if (typeof window.gtag === 'function' && event === 'checkout_started') {
+        window.gtag('event', 'begin_checkout', { event_category: 'checkout', event_label: plan || 'bundle' });
+      }
+      if (typeof window.fbq === 'function' && event === 'checkout_started') {
+        window.fbq('track', 'InitiateCheckout', { content_name: plan || 'bundle' });
+      }
+    }
+
+    function wireClicks() {
+      const checkoutButtons = document.querySelectorAll('[data-plan]');
+      checkoutButtons.forEach((btn) => {
+        btn.addEventListener('click', () => {
+          const plan = btn.dataset.plan;
+          track('checkout_started', plan === 'starter' || plan === 'dfy' ? plan : null);
+        });
+      });
+    }
+
+    async function hydrateConfig() {
+      const runtime = document.getElementById('runtime-note');
+      try {
+        const res = await fetch('/v1/public/config', { cache: 'no-store' });
+        if (!res.ok) throw new Error('config not available');
+        const cfg = await res.json();
+
+        if (cfg?.pricing?.starter_label) {
+          document.getElementById('starter-price').textContent = cfg.pricing.starter_label;
+        }
+        if (cfg?.pricing?.dfy_label) {
+          document.getElementById('dfy-price').textContent = cfg.pricing.dfy_label;
+        }
+
+        if (cfg?.checkout_links?.starter) {
+          document.querySelectorAll('[data-plan="starter"]').forEach((el) => el.href = cfg.checkout_links.starter);
+        }
+        if (cfg?.checkout_links?.dfy) {
+          document.querySelectorAll('[data-plan="dfy"]').forEach((el) => el.href = cfg.checkout_links.dfy);
+        }
+
+        const paymentReady = !!cfg?.payment_ready;
+        const activationReady = !!cfg?.instant_activation_ready;
+        runtime.textContent = paymentReady
+          ? `Checkout live. Instant activation target: ${cfg.activation_target_seconds || 60}s. ${activationReady ? 'Activation pipeline ready.' : 'Activation pipeline pending final key setup.'}`
+          : 'Checkout not ready yet in config. Use docs-page to complete payment setup variables.';
+      } catch (_) {
+        runtime.textContent = 'Live config check unavailable. Fallback checkout links are active in this page template.';
+      }
+    }
+
+    track('landing_view', null);
+    wireClicks();
+    hydrateConfig();
+  </script>
 </body>
 </html>
