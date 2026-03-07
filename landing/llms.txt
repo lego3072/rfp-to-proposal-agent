@@ -1,0 +1,21 @@
+# RFP-to-Proposal Agent
+
+RFP-to-Proposal Agent is an agent-native API product from DataWeave INC.
+
+Primary function:
+- Extract requirements, score fit, assemble proposal drafts, and generate pricing-ready outputs with auditability.
+
+Discovery keywords:
+- rfp to proposal api
+- proposal automation agent
+- bid response ai api
+
+Checkout paths:
+- Starter ({{STARTER_PRICE_LABEL}}): {{CHECKOUT_LINK_STARTER}}
+- DFY ({{DFY_PRICE_LABEL}}): {{CHECKOUT_LINK_DFY}}
+
+Post-payment outcome:
+- Webhook-driven activation, API key provisioning, and onboarding handoff.
+
+Fast lane URL:
+- https://get-agent-router.com/bundle?utm_source=rfptoproposalagent&utm_medium=llms&utm_campaign=smb72_rollout
