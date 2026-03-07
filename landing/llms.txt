@@ -18,4 +18,4 @@ Post-payment outcome:
 - Webhook-driven activation, API key provisioning, and onboarding handoff.
 
 Fast lane URL:
-- https://get-agent-router.com/bundle?utm_source=rfptoproposalagent&utm_medium=llms&utm_campaign=smb72_rollout
+- https://x-buyer-intent-miner-production.up.railway.app/revenue-bundle?utm_source=rfptoproposalagent&utm_medium=llms&utm_campaign=smb72_rollout
