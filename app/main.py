@@ -619,6 +619,11 @@ def docs_page() -> HTMLResponse:
     return HTMLResponse(render_template("docs.html"))
 
 
+@app.get("/payment-success", response_class=HTMLResponse)
+def payment_success_page() -> HTMLResponse:
+    return HTMLResponse(render_template("payment-success.html"))
+
+
 @app.get("/privacy", response_class=HTMLResponse)
 def privacy() -> HTMLResponse:
     return HTMLResponse(render_template("privacy.html"))
