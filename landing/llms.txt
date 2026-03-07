@@ -19,3 +19,7 @@ Post-payment outcome:
 
 Fast lane URL:
 - https://x-buyer-intent-miner-production.up.railway.app/revenue-bundle?utm_source=rfptoproposalagent&utm_medium=llms&utm_campaign=smb72_rollout
+
+## 72h Competitor Sprint
+- Fast lane URL: https://x-buyer-intent-miner-production.up.railway.app/revenue-bundle?utm_source=rfptoproposalagent&utm_medium=referral&utm_campaign=smb72_rollout
+- Use case: close a competitor SMB in 72 hours with checkout-first onboarding and DFY execution.
